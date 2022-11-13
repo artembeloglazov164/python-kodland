@@ -4,6 +4,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 driver = webdriver.Chrome(ChromeDriverManager().install())
 
-while True:
-    text_input = input("введи чё нибудь:")
-    driver.get(f"https://www.avito.ru/saratov?q={text_input}")
+text_input = input("введи чё нибудь:")
+for i in range(1,4):
+    driver.get(f"https://www.avito.ru/saratov?p={i}&q={text_input}")
+    time.sleep(3)
