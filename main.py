@@ -28,4 +28,4 @@ element = len(data)
 print (element)
 for i in range(element):        
     db.avito.put(data[i])
-print ('Данные записаны в базу')
+print ('ОК Данные записаны в базу')
