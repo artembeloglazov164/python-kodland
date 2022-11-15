@@ -1,0 +1,24 @@
+    <title>Avito searcher</title>
+    <link rel="stylesheet" href= "/static/css/cart.css">
+    <link rel="stylesheet" type="text/css" href="static/css/products.css">
+
+<div>
+    <table>
+      <tr>
+        <th>Цена</th>
+        <th>Описание</th>
+        <th>Город</th>
+        <th>Район</th>
+        <th>Ссылка</th>
+      </tr>
+        {% for row in data %}
+          <tr>
+            <td>{{row.price}} руб</td>
+            <td>{{row.item}}</td>
+            <td>{{row.city}}</td>
+            <td>{{row.region}}</td>
+            <td><a href="{{row.link}}">{{row.link}}</a></td>
+          </tr>
+        {% endfor %}    
+    </table>
+</div>
