@@ -3,6 +3,7 @@ import time
 import replace
 import sqlite3
 from kodland_db import db
+from flask import Flask, render_template, request, url_for, redirect, jsonify
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
@@ -61,7 +62,24 @@ c = conn.cursor()
 c.execute('SELECT * FROM avito')
 rows = c.fetchall()
 print('ОК В базе находится', len(rows), 'записей.')
-conn.commit()
 conn.close()
+
 #Выводим сообщение после завершения кода
 print ('код завершил работу без ошибок')
+
+#Создаем веб-приложение
+app = Flask(__name__)
+
+@app.route('/')
+def avito_searcher():
+    data = db.avito.get_all()
+    for row in data:
+        row.price = row.price
+        row.item = row.item
+        row.city = row.city
+        row.region = row.region
+        row.link = row.link
+    return render_template('avito.html', data=data)
+driver.get(f"http://127.0.0.1:5000")
+if __name__ == "__main__":
+    app.run()
