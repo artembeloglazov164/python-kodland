@@ -80,6 +80,8 @@ def avito_searcher():
         row.region = row.region
         row.link = row.link
     return render_template('avito.html', data=data)
-driver.get(f"http://127.0.0.1:5000")
+#Запускаем приложение
 if __name__ == "__main__":
     app.run()
+    
+driver.get(f"http://127.0.0.1:5000")
