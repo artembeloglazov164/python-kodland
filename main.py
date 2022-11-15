@@ -1,6 +1,7 @@
 import re
 import time
 import replace
+import sqlite3
 from kodland_db import db
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -8,9 +9,33 @@ from bs4 import BeautifulSoup
 
 driver = webdriver.Chrome(ChromeDriverManager().install())
 
+#Очищаем базу от предыдущих запросов при помощи sqlite3
+print('Очищаем базу от предыдущих запросов.')
+conn = sqlite3.connect('kodland_db\db.db')
+c = conn.cursor()
+c.execute('DELETE FROM avito;',);
+print('ОК Удалено', c.rowcount, 'записей в таблице.')
+conn.commit()
+conn.close()
+
+#Вводим данные для поиска
 text_input = input("введите что искать:")
-for i in range(1):
-    driver.get(f"https://www.avito.ru/saratov?p={i}&q={text_input}")
+
+#Осуществляем поиск и определяем количество найденых страниц
+driver.get(f"https://www.avito.ru/saratov?&q={text_input}")
+soup = BeautifulSoup(driver.page_source, features="lxml")
+try:
+    pages = soup.find('span', {'data-marker': 'pagination-button/next'}).previous_element
+except:
+    pages = 1
+print('По вашему запросу найдено', pages, 'страниц')
+
+#Вводим колличество страниц с которых будем забирать данные а базу
+page = int (input ("введите количество страниц для сохранения результатов:"))
+
+#Пробегаем по указанным страницам и парсим данные в списки которые пишем в базу данных 
+for i in range(page):
+    driver.get(f"https://www.avito.ru/saratov?p={1+i}&q={text_input}")
     time.sleep(3)
     url = 'https://www.avito.ru'
     soup = BeautifulSoup(driver.page_source, features="lxml")
@@ -24,8 +49,19 @@ for i in range(1):
             'region': block.find('div', class_=re.compile('geo-root')).get_text(strip=True),
             'link': url + block.find('a', class_=re.compile('link-link')).get('href'),
         })
-element = len(data)
-print (element)
-for i in range(element):        
-    db.avito.put(data[i])
-print ('ОК Данные записаны в базу')
+    element = len(data)
+    print ('Найдено', element,'объявлений на странице',1+i)
+    for i in range(element):        
+        db.avito.put(data[i])
+    print ('ОК Данные записаны в базу')
+
+#Подключаемся к базе и выводим количество зписей в консоль    
+conn = sqlite3.connect('kodland_db\db.db')
+c = conn.cursor()
+c.execute('SELECT * FROM avito')
+rows = c.fetchall()
+print('ОК В базе находится', len(rows), 'записей.')
+conn.commit()
+conn.close()
+#Выводим сообщение после завершения кода
+print ('код завершил работу без ошибок')
