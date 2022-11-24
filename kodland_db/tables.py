@@ -11,3 +11,11 @@ class Users(Base):
     city = Column(TEXT)
     region = Column(TEXT)
     link = Column(TEXT)
+    
+class Search(Base):
+
+    __tablename__ = 'search'
+
+    pages = Column(Integer, primary_key=True)
+    text_input = Column(TEXT)
+    date = Column(TEXT)
