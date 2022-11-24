@@ -48,7 +48,7 @@ def find(text_input,page):
     print(page,text_input)
     for i in range(page):
         driver.get(f"https://www.avito.ru/saratov?p={1+i}&q={text_input}")
-        time.sleep(3)
+#        time.sleep(3)
         url = 'https://www.avito.ru'
         soup = BeautifulSoup(driver.page_source, features="lxml")
         blocks = soup.find_all('div', class_=re.compile('iva-item-content'))
@@ -84,8 +84,6 @@ def bd_items():
     
 app = Flask(__name__)
 
-#driver = webdriver.Chrome(ChromeDriverManager().install())
-#driver.get(f"http://127.0.0.1:5000")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -99,16 +97,16 @@ def index():
         db.search.put({"text_input": text_input , "date": search_date})
         db_clean()
         page_find(text_input)
-        return render_template('parse.html',message=('По вашему запросу найдено',pages,'страниц'))
+        return render_template('parse.html',message = ('По запросу найдено',pages ,'страниц'))
     return render_template('input.html')
 
 @app.route('/parse', methods=['GET', 'POST'])
 def parse():
     if request.method == 'POST':
         page = request.form['page']
-        page = int(page)
         if not page:
             return render_template('parse.html', message='Вы ничего не ввели')
+        page = int(page)
         find(text_input,page)
         return redirect(url_for('avito'))
     return render_template('parse.html')
