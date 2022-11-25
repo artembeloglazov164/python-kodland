@@ -1,8 +1,10 @@
 <link rel="stylesheet" href= "static/css/login.css">
-
+<style>
+  body { background: url(static/images/bg3.jpg); }
+</style>
 <form method="post" action="/parse" >
 <div class="login-form">
-{{message}}
+<font color="white">{{message}}</font>
 <input type="text" name="page" placeholder="введите количество страниц для сохранения результатов">
 <button type="submit">Запросить данные</button>
 </form>
