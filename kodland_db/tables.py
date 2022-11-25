@@ -16,6 +16,5 @@ class Search(Base):
 
     __tablename__ = 'search'
 
-    pages = Column(Integer, primary_key=True)
-    text_input = Column(TEXT)
+    text_input = Column(TEXT, primary_key=True)
     date = Column(TEXT)
