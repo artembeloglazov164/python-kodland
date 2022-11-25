@@ -45,10 +45,8 @@ def page_find(text_input):
     
 def find(text_input,page):
     driver = webdriver.Chrome(ChromeDriverManager().install())    
-    print(page,text_input)
     for i in range(page):
         driver.get(f"https://www.avito.ru/saratov?p={1+i}&q={text_input}")
-#        time.sleep(3)
         url = 'https://www.avito.ru'
         soup = BeautifulSoup(driver.page_source, features="lxml")
         blocks = soup.find_all('div', class_=re.compile('iva-item-content'))
@@ -97,7 +95,7 @@ def index():
         db.search.put({"text_input": text_input , "date": search_date})
         db_clean()
         page_find(text_input)
-        return render_template('parse.html',message = ('По запросу найдено',pages ,'страниц'))
+        return render_template('parse.html',message = ('По запросу найдено ' + pages + ' страниц'))
     return render_template('input.html')
 
 @app.route('/parse', methods=['GET', 'POST'])
@@ -108,6 +106,7 @@ def parse():
             return render_template('parse.html', message='Вы ничего не ввели')
         page = int(page)
         find(text_input,page)
+        bd_items()
         return redirect(url_for('avito'))
     return render_template('parse.html')
 
@@ -122,6 +121,19 @@ def avito():
         row.region = row.region
         row.link = row.link
     return render_template('avito.html', data=data)
+
+
+
+@app.route('/history')
+def history():
+    data = db.search.get_all()
+    for row in data:
+        row.text_input = row.text_input
+        row.date = row.date
+    return render_template('history.html', data=data)
+
+
+
 #Запускаем приложение
 if __name__ == "__main__":
     app.run()
