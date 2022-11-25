@@ -1,0 +1,17 @@
+    <title>Avito searcher</title>
+    <link rel="stylesheet" href= "/static/css/cart.css">
+    <link rel="stylesheet" type="text/css" href="static/css/products.css">
+<div>
+    <table>
+      <tr>
+        <th>Запрос</th>
+        <th>Дата/Время</th>
+      </tr>
+        {% for row in data %}
+          <tr>
+            <td>{{row.text_input}}</td>
+            <td>{{row.date}}</td>
+          </tr>
+        {% endfor %}    
+    </table>
+</div>
