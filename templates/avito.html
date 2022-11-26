@@ -1,8 +1,17 @@
+<!DOCTYPE html>
+<html>
     <title>Avito searcher</title>
     <link rel="stylesheet" href= "/static/css/cart.css">
     <link rel="stylesheet" type="text/css" href="static/css/products.css">
-<div>
-    <table>
+<head>
+
+</head>
+<body>
+<p><button onclick="sortTable()">Сортировать по цене</button>
+<button onclick="window.location.href = 'http://127.0.0.1:5000/history';">История запросов</button>
+<button onclick="window.location.href = 'http://127.0.0.1:5000';">Новый запрос</button></p>
+
+<table id="myTable">
       <tr>
         <th>Цена</th>
         <th>Описание</th>
@@ -12,12 +21,51 @@
       </tr>
         {% for row in data %}
           <tr>
-            <td>{{row.price}} руб</td>
+            <td>{{row.price}}</td>
             <td>{{row.item}}</td>
             <td>{{row.city}}</td>
             <td>{{row.region}}</td>
             <td><a href="{{row.link}}">{{row.link}}</a></td>
           </tr>
         {% endfor %}    
-    </table>
-</div>
+</table>
+
+<script>
+function sortTable() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("myTable");
+  switching = true;
+  /*Сделайте петлю, которая будет продолжаться до тех пор, пока
+  никакого переключения не было сделано:*/
+  while (switching) {
+    //начните с того, что скажите: никакого переключения не происходит:
+    switching = false;
+    rows = table.rows;
+    /*Цикл через все строки таблицы (за исключением
+    во-первых, который содержит заголовки таблиц):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //начните с того, что не должно быть никакого переключения:
+      shouldSwitch = false;
+      /*Получите два элемента, которые вы хотите сравнить,
+      один из текущей строки и один из следующей:*/
+      x = rows[i].getElementsByTagName("TD")[0];
+      y = rows[i + 1].getElementsByTagName("TD")[0];
+      //проверьте, должны ли две строки поменяться местами:
+      if (Number(x.innerHTML) > Number(y.innerHTML)) {
+        //если это так, отметьте как переключатель и разорвите петлю:
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /*Если переключатель был отмечен, сделайте переключатель
+      и отметьте, что переключение было сделано:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+</script>
+
+</body>
+</html>
